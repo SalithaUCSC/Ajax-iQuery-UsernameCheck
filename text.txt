@@ -1,0 +1,49 @@
+	public function checkEmail()
+	{
+		$this->load->model('Search_model');
+		if($this->Search_model->getEmail($_POST['email'])){
+			echo '<label class="text-danger"><span><i class="fa fa-times" aria-hidden="true">
+			</i> This email is already taken</span></label>';
+		}
+		else {
+			echo '<label class="text-success"><span><i class="fa fa-check-circle-o" aria-hidden="true"></i> Email is available</span></label>';
+		}
+	}
+
+	public function getEmail($email)
+	{
+		$this->db->where('email' , $email);
+		$query = $this->db->get('users');
+
+		if($query->num_rows()>0){
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+
+	<label for="email">Enter Email</label>
+		<input type="text" name="email" id="email" class="form-control">
+		<br>
+		<span id="email_result"></span>
+		<br><br>
+
+
+<script type="text/javascript">
+	$(document).ready(function(){
+		$('#email').change(function(){
+			var email = $('#email').val();
+			if(email != ''){
+				$.ajax({
+					url: "<?php echo base_url(); ?>Search/checkEmail",
+					method: "POST",
+					data: {email:email},
+					success: function(data){
+						$('#email_result').html(data);
+					}
+				});
+			}
+		});
+	});
+</script> 
